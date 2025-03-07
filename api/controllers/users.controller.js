@@ -7,6 +7,7 @@ const { sendValidationEmail } = require("../config/mailer.config");
 module.exports.create = (req, res, next) => {
   const { email } = req.body;
 
+  
   User.findOne({ email })
     .then((user) => {
       if (user) {

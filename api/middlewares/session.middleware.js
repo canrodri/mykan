@@ -10,6 +10,7 @@ module.exports.loadSessionUser = (req, res, next) => {
     User.findById(userId)
       .then((user) => {
         req.user = user;
+    
         next();
       })
       .catch((error) => next(error));

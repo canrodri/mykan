@@ -5,23 +5,22 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-  },
+
   dueDate: {
     type: Date,
     default: Date.now()
   },
-status: {
+board: {
   type: String,
-  enum: ["active", "inactive"],
-  default: "pending"
+
+  default: "To Do"
 },
 
   isCompleted: {
     type: Boolean,
     default: false,
   },
+
   priority: {
     type: String,
     enum: ["low", "medium", "high"],
@@ -31,7 +30,7 @@ status: {
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    // required: true,
   },
 }, { timestamps: true }); //createdAt, updatedAt
 

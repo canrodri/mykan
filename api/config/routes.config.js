@@ -11,23 +11,28 @@ const auth = require("../middlewares/session.middleware")
 
 
 // tasks
-router.get('/tasks',auth.isAuthenticated, auth.isAdmin, tasks.list); 
-router.post('/tasks', auth.isAuthenticated, auth.isAdmin, tasks.create); 
-router.put('/tasks/:id', auth.isAuthenticated, auth.isAdmin, tasks.update); 
-router.put('/tasks/:id/complete', auth.isAuthenticated, auth.isAdmin, tasks.completeTask ); 
-router.delete('/tasks/:id',auth.isAuthenticated, auth.isAdmin, tasks.delete); 
+router.get('/tasks',auth.isAuthenticated, tasks.list); 
+router.post('/tasks', auth.isAuthenticated, tasks.create); 
+router.put('/tasks/:id', auth.isAuthenticated, tasks.update); 
+router.put('/tasks/:id/complete', auth.isAuthenticated, tasks.completeTask ); 
+router.delete('/tasks/:id',auth.isAuthenticated, tasks.delete); 
 
 // users
 router.post("/users", users.create);
-router.patch("/users", auth.isAuthenticated, users.update);
-router.get("/users/:id/validate", users.validate )
+router.patch("/users/me", auth.isAuthenticated, users.update);
+router.get("/users/me", auth.isAuthenticated, users.profile);
+router.get("/users/:id/validate",auth.isAuthenticated, auth.isAdmin, users.validate)
 
 //sessions
 router.post("/sessions", sessions.create)
-router.delete("/sessions", sessions.destroy);
+router.delete("/sessions", auth.isAuthenticated, sessions.destroy);
 
 //boards
-router.post("/boards", auth.isAuthenticated, boards.create);
+router.post('/columns', auth.isAuthenticated, boards.createColumn); 
+router.post('/columns/:columnId/cards', auth.isAuthenticated, boards.createCard); 
+router.get('/board', auth.isAuthenticated, boards.getBoard); 
+router.put('/columns/:id', auth.isAuthenticated, boards.updateColumn); 
+router.delete('/columns/:id', auth.isAuthenticated, boards.deleteColumn); 
 
 
 // 404

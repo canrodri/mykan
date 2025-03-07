@@ -1,19 +1,21 @@
 const mongoose = require("mongoose");
 
 const boardSchema = new mongoose.Schema({
-  title: { 
+  name: { 
     type: String, 
     required: true
- },
+  },
   owner: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", 
-    required: true },
+    required: true 
+  },
   columns: [
     {
-      title: String,
-      tasks: [{ type: mongoose.Schema.Types.ObjectId,   ref: "Task" }],
-    },
+      title: { type: String, required: true },   
+      tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
+      order: { type: Number, required: true }, 
+    }
   ],
 });
 
