@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 function PageLayout({ children }) {
   return (
-    <div className="w-full h-full absolute bg-white">{children}</div>
+    <div className="w-full h-full relative">{children}</div>
   );
 }
 

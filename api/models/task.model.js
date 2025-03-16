@@ -10,17 +10,19 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-board: {
-  type: String,
-
-  default: "To Do"
-},
-
+  board: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Board",
+    required: true,
+  },
+  columnId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   isCompleted: {
     type: Boolean,
     default: false,
   },
-
   priority: {
     type: String,
     enum: ["low", "medium", "high"],

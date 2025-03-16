@@ -1,93 +1,156 @@
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
+import { useBoard } from "../../contexts/board-context";
+import { useTheme } from "../../contexts/dark-context"; // Importa el contexto del tema
 
-function TaskForm({ onTaskAdded, columns }) {
+function TaskForm({ onTaskAdded }) {
+  const { columns, addTask } = useBoard();
+  const { theme } = useTheme(); // Obtén el tema actual
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       title: "",
       dueDate: "",
-      priority: "low",
-      columnName: columns.length > 0 ? columns[0].title : "", // Valor predeterminado para columnId
+      columnId: columns[0]?._id || "",
+      priority: "low", // Prioridad por defecto
     },
   });
 
-  const onSubmit = (data) => {
-    if (!data.columnName) {
-      alert("Please select a column"); // Validación adicional
-      return;
+  const onSubmit = async (data) => {
+    try {
+      const column = columns.find((col) => col._id === data.columnId);
+      if (!column) {
+        throw new Error("Columna no encontrada");
+      }
+
+      const taskData = {
+        title: data.title,
+        dueDate: data.dueDate,
+        priority: data.priority,
+        columnId: data.columnId,
+      };
+
+      console.log("Datos enviados al backend:", taskData);
+      await addTask(taskData); // Agregar la tarea
+      reset(); // Reiniciar el formulario
+      if (onTaskAdded) onTaskAdded(); // Llamar al callback si existe
+    } catch (error) {
+      console.error("Error adding task:", error);
+      alert("Failed to add task. Please try again."); // Notificar al usuario
     }
-    onTaskAdded(data); // Enviar los datos del formulario
   };
 
   return (
-    <div className="bg-white p-4 shadow-md rounded-md mb-4 w-full max-w-md mx-auto">
-      <h3 className="text-lg font-semibold mb-2">Add New Task</h3>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-        <div>
-          <label className="block text-sm font-medium">Task Title</label>
-          <input
-            type="text"
-            {...register("title", { required: "Title is required" })}
-            className="w-full p-2 border rounded-md"
-          />
-          {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
-        </div>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={`p-6 rounded-lg shadow-lg border ${
+        theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+      }`}
+    >
+      {/* Campo de Título */}
+      <label
+        htmlFor="title"
+        className={`block text-sm font-semibold ${
+          theme === "dark" ? "text-gray-200" : "text-gray-700"
+        }focus:ring-2 focus:ring-[#8079db]`}
+      >
+        Title
+      </label>
+      <input
+        {...register("title", { required: "Title is required" })}
+        id="title"
+        type="text"
+        className={`border ${
+          theme === "dark" ? "border-gray-600 bg-gray-700 text-gray-200" : "border-gray-300 bg-white text-gray-800"
+        } p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[#8079db]`}
+        aria-invalid={errors.title ? "true" : "false"}
+      />
+      {errors.title && (
+        <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
+      )}
 
-        <div>
-          <label className="block text-sm font-medium">Due Date</label>
-          <input
-            type="date"
-            {...register("dueDate", { required: "Date is required" })}
-            className="w-full p-2 border rounded-md"
-          />
-          {errors.dueDate && <p className="text-red-500 text-sm">{errors.dueDate.message}</p>}
-        </div>
+      {/* Campo de Fecha de Vencimiento */}
+      <label
+        htmlFor="dueDate"
+        className={`block text-sm font-semibold ${
+          theme === "dark" ? "text-gray-200" : "text-gray-700"
+        } focus:ring-2 focus:ring-[#8079db] mt-4`}
+      >
+        Due Date
+      </label>
+      <input
+        {...register("dueDate")}
+        id="dueDate"
+        type="date"
+        className={`border ${
+          theme === "dark" ? "border-gray-600 bg-gray-700 text-gray-200" : "border-gray-300 bg-white text-gray-800"
+        } p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[#8079db]`}
+      />
 
-        <div>
-          <label className="block text-sm font-medium">Priority</label>
-          <select
-            {...register("priority", { required: "Priority is required" })}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-          {errors.priority && <p className="text-red-500 text-sm">{errors.priority.message}</p>}
-        </div>
+      {/* Campo de Prioridad */}
+      <label
+        htmlFor="priority"
+        className={`block text-sm font-semibold ${
+          theme === "dark" ? "text-gray-200" : "text-gray-700"
+        } focus:ring-2 focus:ring-[#8079db] mt-4`}
+      >
+        Priority
+      </label>
+      <select
+        {...register("priority")}
+        id="priority"
+        className={`border ${
+          theme === "dark" ? "border-gray-600 bg-gray-700 text-gray-200" : "border-gray-300 bg-white text-gray-800"
+        } p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[#8079db]`}
+      >
+         <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
 
-        <div>
-          <label className="block text-sm font-medium">Column</label>
-          <select
-            {...register("columnName", { required: "Column is required" })}
-            className="w-full p-2 border rounded-md"
-          >
-            {columns.map((column) => (
-              <option key={column.title} value={column.title}>
-                {column.name}
-              </option>
-            ))}
-          </select>
-          {errors.columnName && <p className="text-red-500 text-sm">{errors.columnName.message}</p>}
-        </div>
+      {/* Campo de Columna */}
+      <label
+        htmlFor="columnId"
+        className={`block text-sm font-semibold ${
+          theme === "dark" ? "text-gray-200" : "text-gray-700"
+        } focus:ring-2 focus:ring-[#8079db] mt-4`}
+      >
+        Column
+      </label>
+      <select
+        {...register("columnId", { required: "Column is required" })}
+        id="columnId"
+        className={`border ${
+          theme === "dark" ? "border-gray-600 bg-gray-700 text-gray-200" : "border-gray-300 bg-white text-gray-800"
+        } p-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-[#8079db]`}
+      >
+        {columns.map((column) => (
+          <option key={column._id} value={column._id}>
+            {column.title}
+          </option>
+        ))}
+      </select>
 
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-        >
-          Add Task
-        </button>
-      </form>
-    </div>
+      {/* Botón de Envío */}
+      <button
+        type="submit"
+        className={`bg-[#8079db] text-white font-semibold p-2 rounded-md mt-6 w-full hover:bg-[#5f4fb3] transition-colors ${
+          theme === "dark" ? "hover:bg-[#4c3d8f]" : "hover:bg-[#5f4fb3]"
+        }`}
+      >
+        Add Task
+      </button>
+    </form>
   );
 }
 
 TaskForm.propTypes = {
-  onTaskAdded: PropTypes.func.isRequired,
-  columns: PropTypes.array.isRequired,
+  onTaskAdded: PropTypes.func,
 };
+
 export default TaskForm;

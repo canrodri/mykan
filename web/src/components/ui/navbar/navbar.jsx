@@ -1,34 +1,73 @@
 import { useState } from "react";
 import TaskForm from "../../task/task-form";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import logo from "../../../assets/logo-mykan.png";
+import { useTheme } from "../../../contexts/dark-context";
 
 function Navbar() {
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
-      <nav className="flex justify-between items-center bg-[#555974] p-4 shadow-md">
-        <div className="text-xl font-bold text-white">Logo</div>
-        <button
-          onClick={() => setShowTaskForm(true)}
-          className="bg-[radial-gradient(circle,_at_center,_rgb(70,60,80)_0%,_rgb(116,32,216)_35%)] 
-            px-4 py-2 rounded hover:bg-[#7420d8] transition duration-300 text-white"
-        >
-          + New Task
-        </button>
+      {/* Barra de navegación */}
+      <nav className={`flex justify-between items-center ${
+        theme === "dark" ? "dark:bg-gray-800" : "bg-[#8079db]"
+      } p-4 shadow-md rounded-xl mx-2 mt-1`}>
+        {/* Logo */}
+        <div className="text-xl font-bold text-white dark:text-gray-200">
+          <img src={logo} alt="Logo" className="h-10" />
+        </div>
+
+        {/* Contenedor para los botones (derecha) */}
+        <div className="flex items-center space-x-2">
+          {/* Botón para cambiar el tema */}
+          <button
+            onClick={toggleTheme}
+            className={`p-2 rounded-xl text-white ${
+            theme === "dark" ? "dark:bg-gray-700 dark:hover:bg-gray-600" : "bg-[#8079db] hover:bg-[#7420d8]"}`}
+          >
+            {theme === "dark" ? "🌙" : "☀️"}
+          </button>
+
+          {/* Botón para abrir el formulario de nueva tarea */}
+          <button
+            onClick={() => setShowTaskForm(true)}
+            className={` px-4 py-2 rounded-lg  transition duration-300 text-white
+            ${theme === "dark" ? " dark:bg-gray-700  dark:hover:bg-gray-600" : "bg-[#8079db] hover:bg-[#7420d8]" }` }
+          >
+            + New Task
+          </button>
+        </div>
       </nav>
 
-   {/* add task from navbar */}
+      {/* Formulario de nueva tarea (modal) */}
       {showTaskForm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-bold mb-4">Create New Task</h2>
-            <TaskForm onTaskAdded={() => setShowTaskForm(false)} />
+        <div className={ `fixed inset-0 flex items-center justify-center z-50 ${
+        theme === "dark" ? "dark:backdrop-blur-[6px]" : "backdrop-blur-[6px]"}`
+      }>
+
+          <div className={`relative p-6 rounded-lg shadow-lg w-96 ${
+          theme === "dark" ? "dark:bg-gray-800" : "bg-gray-200"}`
+          }>
+            {/* Botón para cerrar el modal */}
             <button
               onClick={() => setShowTaskForm(false)}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              className="absolute top-2 right-2 px-2 py-1 text-gray-800 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 transition"
             >
-              Close
+              <FontAwesomeIcon icon={faTimes} size="lg" />
             </button>
+
+            {/* Título del modal */}
+            <h2 className={`text-lg mb-5 mt-5 text-center ${
+          theme === "dark" ? "dark:text-gray-400" : "text-black"}`
+          }>
+              Create New Task
+            </h2>
+
+            {/* Formulario de tarea */}
+            <TaskForm onTaskAdded={() => setShowTaskForm(false)} />
           </div>
         </div>
       )}

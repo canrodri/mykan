@@ -17,30 +17,32 @@ const register = (user) => http.post("/users", user);
 const login = (user) => http.post("/sessions", user);
 
 // Funciones de Tareas
-const create = (task) => http.post("/tasks", task);
-const list = () => http.get("/board");
-const update = (taskId, updates) => http.put(`tasks/${taskId}`, updates);
-const complete = (taskId) => http.put(`tasks/${taskId}/complete`);
+const createTask = (task) => http.post("/tasks", task);
+const listTasks = () => http.get("/tasks");
+const updateTask = (taskId, updates) => http.put(`tasks/${taskId}`, updates);
+const completeTask = (taskId) => http.put(`tasks/${taskId}/complete`);
 const deleteTask = (taskId) => http.delete(`tasks/${taskId}`);
+const moveTask = (taskId, newColumnId) => http.put(`/tasks/${taskId}/move`, { columnId: newColumnId }); 
+const getTaskStats = () => http.get("/tasks/stats");
 
 // Funciones de Board
 const createColumn = (column) => http.post("/columns", column);
-const createCard = (columnName, taskData) =>
-  http.post(`columns/${columnName}/cards`, taskData);
+const createCard = (columnId, taskData) => http.post(`columns/${columnId}/cards`, taskData);
 const getBoard = () => http.get("/board");
-const updateColumn = (columnId, updates) =>
-  http.put(`columns/${columnId}`, updates);
+const updateColumn = (columnId, updates) => http.put(`columns/${columnId}`, updates);
 const deleteColumn = (columnId) => http.delete(`columns/${columnId}`);
 
 export {
   login,
   profile,
   register,
-  create,
-  list,
-  update,
-  complete,
+  createTask,
+  listTasks,
+  updateTask,
+  completeTask,
   deleteTask,
+  moveTask,
+  getTaskStats,
   createColumn,
   createCard,
   getBoard,

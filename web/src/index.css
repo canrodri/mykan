@@ -1,1 +1,21 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Creepster&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Manrope:wght@200..800&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&family=Creepster&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Manrope:wght@200..800&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+.font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .font-roboto-condensed {
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+
+  body {
+    background-color: #ffffff; 
+    color: #333333; 
+  }
+  
+  html.dark body {
+    background-color: #1a202c; 
+    color: #e2e8f0; 
+  }

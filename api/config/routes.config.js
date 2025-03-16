@@ -11,11 +11,15 @@ const auth = require("../middlewares/session.middleware")
 
 
 // tasks
-router.get('/tasks',auth.isAuthenticated, tasks.list); 
-router.post('/tasks', auth.isAuthenticated, tasks.create); 
-router.put('/tasks/:id', auth.isAuthenticated, tasks.update); 
+router.get('/tasks',auth.isAuthenticated, tasks.listTasks); 
+router.post('/tasks', auth.isAuthenticated, tasks.createTask); 
+router.put('/tasks/:id', auth.isAuthenticated, tasks.updateTask);
+router.put("/tasks/:id/move", auth.isAuthenticated, tasks.moveTask); 
 router.put('/tasks/:id/complete', auth.isAuthenticated, tasks.completeTask ); 
-router.delete('/tasks/:id',auth.isAuthenticated, tasks.delete); 
+router.delete('/tasks/:id',auth.isAuthenticated, tasks.deleteTask);
+router.get("/tasks/stats", auth.isAuthenticated, tasks.getTaskStats);
+
+
 
 // users
 router.post("/users", users.create);

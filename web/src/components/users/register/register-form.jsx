@@ -2,12 +2,14 @@ import { useForm } from "react-hook-form";
 import * as IronBriteAPI from "../../../services/api-service";
 import { useAuthContext } from "../../../contexts/auth-context";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../../contexts/dark-context"; // Importa el hook useTheme
 
-function RegisterForm() {
+function RegisterPage() {
   const { register, handleSubmit, formState, setError } = useForm();
   const { login } = useAuthContext();
   const navigate = useNavigate();
   const errors = formState.errors;
+  const { theme } = useTheme(); // Obtén el tema actual
 
   const handleRegister = async (user) => {
     const formData = new FormData();
@@ -30,23 +32,31 @@ function RegisterForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-md w-full bg-white p-6 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
+    <div className={`flex items-center justify-center min-h-screen ${
+      theme === "dark" ? "bg-gray-900 text-gray-200" : "bg-gray-100 text-gray-800"
+    }`}>
+      <div className={`max-w-md w-full p-6 shadow-lg rounded-lg ${
+        theme === "dark" ? "bg-gray-800" : "bg-white"
+      }`}>
+        <h2 className="text-2xl font-semibold text-center mb-6">
           Register
         </h2>
         <form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
           {/* Name Input */}
           <div>
-            <label className="block text-gray-700 font-medium">Name</label>
+            <label className="block font-medium">Name</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                 <i className="fa fa-user"></i>
               </span>
               <input
                 type="text"
-                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  errors.name ? "border-red-500" : "border-gray-300"
+                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  theme === "dark"
+                    ? "bg-gray-700 border-gray-600 focus:ring-purple-500"
+                    : "bg-white border-gray-300 focus:ring-purple-500"
+                } ${
+                  errors.name ? "border-red-500" : ""
                 }`}
                 placeholder="John Doe"
                 {...register("name", { required: "Mandatory field" })}
@@ -59,15 +69,19 @@ function RegisterForm() {
 
           {/* Email Input */}
           <div>
-            <label className="block text-gray-700 font-medium">Email</label>
+            <label className="block font-medium">Email</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                 <i className="fa fa-envelope"></i>
               </span>
               <input
                 type="email"
-                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  errors.email ? "border-red-500" : "border-gray-300"
+                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  theme === "dark"
+                    ? "bg-gray-700 border-gray-600 focus:ring-purple-500"
+                    : "bg-white border-gray-300 focus:ring-purple-500"
+                } ${
+                  errors.email ? "border-red-500" : ""
                 }`}
                 placeholder="user@example.org"
                 {...register("email", { required: "Mandatory field" })}
@@ -80,15 +94,19 @@ function RegisterForm() {
 
           {/* Password Input */}
           <div>
-            <label className="block text-gray-700 font-medium">Password</label>
+            <label className="block font-medium">Password</label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                 <i className="fa fa-lock"></i>
               </span>
               <input
                 type="password"
-                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  errors.password ? "border-red-500" : "border-gray-300"
+                className={`w-full pl-10 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                  theme === "dark"
+                    ? "bg-gray-700 border-gray-600 focus:ring-purple-500"
+                    : "bg-white border-gray-300 focus:ring-purple-500"
+                } ${
+                  errors.password ? "border-red-500" : ""
                 }`}
                 placeholder="••••••••"
                 {...register("password", { required: "Mandatory field" })}
@@ -99,12 +117,14 @@ function RegisterForm() {
             )}
           </div>
 
-          
-
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-md hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className={`w-full font-semibold py-2 rounded-md transition duration-300 focus:outline-none focus:ring-2 ${
+              theme === "dark"
+                ? "bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+                : "bg-purple-600 hover:bg-purple-700 focus:ring-purple-500"
+            } text-white`}
           >
             Register
           </button>
@@ -114,4 +134,4 @@ function RegisterForm() {
   );
 }
 
-export default RegisterForm;
+export default RegisterPage;
