@@ -19,8 +19,6 @@ router.put('/tasks/:id/complete', auth.isAuthenticated, tasks.completeTask );
 router.delete('/tasks/:id',auth.isAuthenticated, tasks.deleteTask);
 router.get("/tasks/stats", auth.isAuthenticated, tasks.getTaskStats);
 
-
-
 // users
 router.post("/users", users.create);
 router.patch("/users/me", auth.isAuthenticated, users.update);
